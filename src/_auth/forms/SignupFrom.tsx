@@ -22,8 +22,8 @@ import { useUserContext } from "@/context/AuthContext"
 
 const SignupFrom = () => {
   // here we renamed the mutateAsync an isLoading with the name infornt of them
-  const { mutateAsync: createUserAccount, isLoading: isCreatingAccount } = useCreateUserAccount()
-  const { mutateAsync: signInAccount, isLoading: isSigninIn } = useSingInAccount()
+  const { mutateAsync: createUserAccount, isPending: isCreatingAccount } = useCreateUserAccount()
+  const { mutateAsync: signInAccount, isPending : isSigninIn } = useSingInAccount()
   const { checkAuthUser, isLoading: isUserLoading } = useUserContext()
   const { toast } = useToast()
   const navigate = useNavigate()
