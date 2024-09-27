@@ -13,9 +13,10 @@ import {
 import { Input } from "@/components/ui/input"
 import { SignupValidation } from "@/lib/validation"
 import Loader from "@/components/shared/Loader"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useToast } from "@/hooks/use-toast"
 import { useCreateUserAccount, useSingInAccount } from "@/lib/react-query/queriesAndMutations"
+import { useUserContext } from "@/context/AuthContext"
 
 
 
@@ -23,7 +24,9 @@ const SignupFrom = () => {
   // here we renamed the mutateAsync an isLoading with the name infornt of them
   const { mutateAsync: createUserAccount, isLoading: isCreatingAccount } = useCreateUserAccount()
   const { mutateAsync: signInAccount, isLoading: isSigninIn } = useSingInAccount()
+  const { checkAuthUser, isLoading: isUserLoading } = useUserContext()
   const { toast } = useToast()
+  const navigate = useNavigate()
 
   const form = useForm<z.infer<typeof SignupValidation>>({
     resolver: zodResolver(SignupValidation),
@@ -39,9 +42,17 @@ const SignupFrom = () => {
   async function onSubmit(values: z.infer<typeof SignupValidation>) {
     const newUser = await createUserAccount(values)
     if (!newUser) return toast({ title: "Sign up user failed. please try again" })
-    
+
     const session = await signInAccount({ email: values.email, password: values.password })
     if (!session) return toast({ title: 'Sign in failed. please try again' })
+
+    const isLoggedIn = await checkAuthUser()
+    if (isLoggedIn) {
+      form.reset()
+      navigate('/')
+    }else{
+      return toast({title:'Sign up failed. please try again later'})
+    }
   }
 
   return (

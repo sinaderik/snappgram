@@ -1,5 +1,5 @@
 import { INewUser } from "@/types"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 import { createUserAccount, signInAccount } from "../appwrite/api"
 
 export const useCreateUserAccount = () => {
