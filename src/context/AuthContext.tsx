@@ -28,17 +28,18 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
     const navigate = useNavigate()
     useEffect(() => {
-        // localStorage.getItem('cookieFallback') === null
-        if (localStorage.getItem('cookieFallback') === '[]') {
+        if (localStorage.getItem('cookieFallback') === '[]' ||
+            localStorage.getItem('cookieFallback') === null
+        ) {
             navigate('/sign-in')
         }
-        
+
         checkAuthUser()
     }, [])
 
     const checkAuthUser = async () => {
         try {
-
+            setIsLoading(true)
             const currentAccount = await getCurrentUser();
             if (!currentAccount) throw Error
             setUser({
