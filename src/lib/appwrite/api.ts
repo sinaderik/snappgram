@@ -10,15 +10,15 @@ export const createUserAccount = async (user: INewUser) => {
             user.password,
             user.name,
         )
-        if(!newAccount) return Error
-        
-        const avatarUrl=avatar.getInitials(user.name)
-        const newUser=await saveUserToDB({
-            accountId:newAccount.$id,
-            name:newAccount.name,
-            email:newAccount.email,
-            username:user.username,
-            imageUrl:avatarUrl,
+        if (!newAccount) return Error
+
+        const avatarUrl = avatar.getInitials(user.name)
+        const newUser = await saveUserToDB({
+            accountId: newAccount.$id,
+            name: newAccount.name,
+            email: newAccount.email,
+            username: user.username,
+            imageUrl: avatarUrl,
         })
         return newUser
     } catch (error) {
@@ -26,21 +26,29 @@ export const createUserAccount = async (user: INewUser) => {
         return error
     }
 }
-export const saveUserToDB = async (user:{
-    accountId:string,
-    name:string,
-    email:string,
-    imageUrl:URL,
-    username?:string,
+export const saveUserToDB = async (user: {
+    accountId: string,
+    name: string,
+    email: string,
+    imageUrl: URL,
+    username?: string,
 }) => {
-    try{
-        const newUser=await databases.createDocument(
+    try {
+        const newUser = await databases.createDocument(
             appwriteConfig.databaseId,
             appwriteConfig.userCollectionId,
             ID.unique(),
             user,
         )
         return newUser
+    } catch (error) {
+        console.log(error)
+    }
+}
+export const signInAccount = async (user: { email: string, password: string }) => {
+    try{
+        const session=await account.createEmailPasswordSession(user.email,user.password)
+        return session
     }catch(error){
         console.log(error)
     }
