@@ -6,7 +6,7 @@ type FileUploaderProps = {
     fieldChange: (files: File[]) => void,
     mediaUrl: string,
 }
-const FileUploader = ({ fieldChange, mediaUrl }:FileUploaderProps) => {
+const FileUploader = ({ fieldChange, mediaUrl }: FileUploaderProps) => {
     const [file, setFile] = useState<File[]>([])
     const [fileUrl, setFileUrl] = useState('')
 
@@ -27,10 +27,12 @@ const FileUploader = ({ fieldChange, mediaUrl }:FileUploaderProps) => {
             <input className='cursor-pointer' {...getInputProps()} />
             {
                 fileUrl ?
-                    (
-                        <div>
-                            <p>file url exist</p>
+                    (<>
+                        <div className='flex flex-1 justify-center w-full p-5 lg:p-10'>
+                            <img className='file_uploader-img' src={fileUrl} alt="user-image" />
                         </div>
+                        <p className='file_uploader-label'>Click or drag photo to replace</p>
+                    </>
                     ) :
                     (
                         <div className='file_uploader-box'>
