@@ -8,12 +8,21 @@ import { z } from "zod"
 import FileUploader from "../shared/FileUploader"
 import { PostValidation } from "@/lib/validation"
 import { Models } from "appwrite"
+import { useCreatePost } from "@/lib/react-query/queriesAndMutations"
+import { useUserContext } from "@/context/AuthContext"
+import { useToast } from "@/hooks/use-toast"
+import { useNavigate } from "react-router-dom"
+import { Loader } from "lucide-react"
 
 type PostFormProps = {
     post?: Models.Document,
 }
 const PostForm = ({ post }: PostFormProps) => {
-    // 1. Define your form.
+    const { toast } = useToast()
+    const navigate = useNavigate()
+    const { user } = useUserContext()
+    const { mutateAsync: createPost, isPending: isLoadingCreate } = useCreatePost()
+
     const form = useForm<z.infer<typeof PostValidation>>({
         resolver: zodResolver(PostValidation),
         defaultValues: {
@@ -24,11 +33,12 @@ const PostForm = ({ post }: PostFormProps) => {
         },
     })
 
-    // 2. Define a submit handler.
-    function onSubmit(values: z.infer<typeof PostValidation>) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values)
+    async function onSubmit(values: z.infer<typeof PostValidation>) {
+        const newPost = await createPost({ ...values, userId: user.id })
+        if (!newPost) {
+            toast({ title: 'Something went wrong, please try again' })
+        }
+        navigate('/')
     }
 
     return (
@@ -111,7 +121,10 @@ const PostForm = ({ post }: PostFormProps) => {
                         className="shad-button_primary white-space-nowrap"
                         type="submit"
                     >
-                        Post
+                        {isLoadingCreate
+                            ? (<><Loader /> Posting...</>)
+                            : 'Post'
+                        }
                     </Button>
 
                 </div>
