@@ -1,10 +1,12 @@
+import { useGetRecentPosts } from "@/lib/react-query/queriesAndMutations";
+import { Models } from "appwrite";
 import { Loader } from "lucide-react";
 
 
 const Home = () => {
-  const isLoadingPosts: boolean = true;
-  const posts = null
 
+  const { data: posts, isLoading: isLoadingPosts, isError: isErrorPosts } = useGetRecentPosts()
+ 
   return (
     <div className="flex flex-1">
       <div className="home-container">
@@ -14,7 +16,13 @@ const Home = () => {
             (
               <Loader />
             ) : (
-              <h3>all posts</h3>
+              <ul className="flex flex-col flex-1 gap-9 w-full">
+                {posts?.documents.map((post)=>{
+                  return(
+                    <li>{post.caption}</li>
+                  )
+                })}
+              </ul>
             )}
         </div>
       </div>
