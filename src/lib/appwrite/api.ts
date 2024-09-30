@@ -1,4 +1,4 @@
-import {  IUpdatePost, INewPost, INewUser, IUpdateUser } from "@/types";
+import { IUpdatePost, INewPost, INewUser, IUpdateUser } from "@/types";
 import { account, appwriteConfig, avatar, databases, storage } from "./config";
 import { ID, Query } from "appwrite";
 
@@ -127,43 +127,54 @@ export async function createPost(post: INewPost) {
 // ============================== UPLOAD FILE
 export async function uploadFile(file: File) {
     try {
-      const uploadedFile = await storage.createFile(
-        appwriteConfig.storageId,
-        ID.unique(),
-        file
-      );
-  
-      return uploadedFile;
+        const uploadedFile = await storage.createFile(
+            appwriteConfig.storageId,
+            ID.unique(),
+            file
+        );
+
+        return uploadedFile;
     } catch (error) {
-      console.log(error);
+        console.log(error);
     }
-  }
-  
-  // ============================== GET FILE URL
-  export function getFilePreview(fileId: string) {
+}
+
+// ============================== GET FILE URL
+export function getFilePreview(fileId: string) {
     try {
-      const fileUrl = storage.getFilePreview(
-        appwriteConfig.storageId,
-        fileId,
-        2000,
-        2000,
-      );
-  
-      if (!fileUrl) throw Error;
-  
-      return fileUrl;
+        const fileUrl = storage.getFilePreview(
+            appwriteConfig.storageId,
+            fileId,
+            2000,
+            2000,
+        );
+
+        if (!fileUrl) throw Error;
+
+        return fileUrl;
     } catch (error) {
-      console.log(error);
+        console.log(error);
     }
-  }
+}
 // ============================== DELETE FILE
 export async function deleteFile(fileId: string) {
     try {
-      await storage.deleteFile(appwriteConfig.storageId, fileId);
-  
-      return { status: "ok" };
+        await storage.deleteFile(appwriteConfig.storageId, fileId);
+
+        return { status: "ok" };
     } catch (error) {
-      console.log(error);
+        console.log(error);
     }
-  }
-    
+}
+
+// ============================== DELETE FILE
+export async function getRecentPosts() {
+    const posts = await databases.listDocuments(
+        appwriteConfig.databaseId,
+        appwriteConfig.postCollectionId,
+        [Query.orderDesc('$createdAt'), Query.limit(20)]
+    )
+
+    if(!posts) throw Error
+    return posts
+}
