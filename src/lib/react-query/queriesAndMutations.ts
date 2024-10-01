@@ -1,6 +1,6 @@
 import { INewPost, INewUser } from "@/types"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { createPost, createUserAccount, getRecentPosts, signInAccount, signOutAccount } from "../appwrite/api"
+import { createPost, createUserAccount, getRecentPosts, likePost, signInAccount, signOutAccount } from "../appwrite/api"
 import { QUERY_KEYS } from "./queryKeys"
 
 export const useCreateUserAccount = () => {
@@ -34,9 +34,33 @@ export const useCreatePost = () => {
     });
 };
 
-export const useGetRecentPosts=()=>{
+export const useGetRecentPosts = () => {
     return useQuery({
-        queryKey:[QUERY_KEYS.GET_RECENT_POSTS],
-        queryFn:getRecentPosts
+        queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+        queryFn: getRecentPosts
+    })
+}
+
+export const useLikePost = () => {
+    const queryclient = useQueryClient()
+
+    return useMutation({
+        mutationFn: ({ postId, likesArray }: { postId: string, likesArray: string[] }) => {
+            return likePost(postId, likesArray)
+        },
+        onSuccess: (data) => {
+            queryclient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_POST_BY_ID, data?.$id]
+            })
+            queryclient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_RECENT_POSTS]
+            })
+            queryclient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_CURRENT_USER]
+            })
+            queryclient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_POSTS]
+            })
+        }
     })
 }
