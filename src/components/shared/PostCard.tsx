@@ -1,3 +1,4 @@
+import { useUserContext } from "@/context/AuthContext"
 import { formatDateString, multiFormatDateString } from "@/lib/utils"
 import { Models } from "appwrite"
 import { Link } from "react-router-dom"
@@ -5,6 +6,9 @@ import { Link } from "react-router-dom"
 type PostCardProps = { post: Models.Document }
 
 const PostCard = ({ post }: PostCardProps) => {
+    console.log(post)
+    const { user } = useUserContext()
+
     return (
         <div className="post-card">
             <div className="flex-between">
@@ -25,7 +29,34 @@ const PostCard = ({ post }: PostCardProps) => {
                         </div>
                     </div>
                 </div>
+
+                <Link
+                    to={`/update-post/${post.$id}`}
+                    className={`${post.creator.$id !== user.id && 'hidden'}`}
+                >
+                    <img
+                        src={`/assets/icons/edit.svg`}
+                        alt="edit"
+                        width={20}
+                        height={20}
+                    />
+                </Link>
             </div>
+            <Link to={`/posts/${post.$id}`}>
+                <div className="small-medium lg:base-medium py-5">
+                    <p>{post.caption}</p>
+                    <ul className="flex gap-1 mt-2">
+                        {post.tags.map((tag: string) => {
+                            return <li key={tag} className="text-light-3">#{tag}</li>
+                        })}
+                    </ul>
+                </div>
+                <img
+                    className="post-card_img"
+                    src={post.imageUrl || 'assets/icons/profile-placeholder.svg'}
+                    alt="post-image"
+                 />
+            </Link>
         </div>
     )
 }
