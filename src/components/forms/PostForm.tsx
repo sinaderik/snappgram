@@ -16,8 +16,10 @@ import { Loader } from "lucide-react"
 
 type PostFormProps = {
     post?: Models.Document,
+    action: 'Update' | 'Create',
 }
-const PostForm = ({ post }: PostFormProps) => {
+const PostForm = ({ post, action }: PostFormProps) => {
+
     const { toast } = useToast()
     const navigate = useNavigate()
     const { user } = useUserContext()
@@ -122,9 +124,9 @@ const PostForm = ({ post }: PostFormProps) => {
                         type="submit"
                     >
                         {isLoadingCreate
-                            ? (<><Loader /> Posting...</>)
-                            : 'Post'
+                            && (<><Loader /> Posting...</>)
                         }
+                        {action === 'Update' ? 'update' : 'post'}
                     </Button>
 
                 </div>

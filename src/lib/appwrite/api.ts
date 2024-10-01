@@ -1,4 +1,4 @@
-import { INewPost, INewUser } from "@/types";
+import { INewPost, INewUser, IUpdatePost } from "@/types";
 import { account, appwriteConfig, avatar, databases, storage } from "./config";
 import { ID, Query } from "appwrite";
 
@@ -228,7 +228,7 @@ export const deleteSavedPost = async (savedRecordId: string) => {
     }
 }
 
-export const getPostById = (postId: string) => {
+export const getPostById = async (postId: string) => {
     try {
         const post = await databases.getDocument(
             appwriteConfig.databaseId,
@@ -238,5 +238,52 @@ export const getPostById = (postId: string) => {
         return post
     } catch (error) {
         console.log(error)
+    }
+}
+
+export const updatePost = async (post: IUpdatePost) => {
+    const hasFileToUpdate = post.file.length > 0
+    try {
+        let image = {
+            imageUrl: post.imageUrl,
+            imageId: post.imageId,
+        }
+        if (hasFileToUpdate) {
+            const uploadedFile = await uploadFile(post.file[0])
+            if (!uploadedFile) throw Error;
+
+            const fileUrl = getFilePreview(uploadedFile.$id);
+
+            if (!fileUrl) {
+                await deleteFile(uploadedFile.$id);
+                throw Error;
+            }
+            image = { ...image, imageId: uploadedFile.$id, imageUrl: fileUrl }
+        }
+
+        // Convert tags into array
+        const tags = post.tags?.replace(/ /g, "").split(",") || [];
+
+        const updatedPost = await databases.createDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.postCollectionId,
+            post.postId,
+            {
+                caption: post.caption,
+                imageUrl: image.imageUrl,
+                imageId: image.imageId,
+                location: post.location,
+                tags: tags,
+            }
+        );
+
+        if (!updatedPost) {
+            await deleteFile(post.imageId);
+            throw Error;
+        }
+
+        return updatedPost;
+    } catch (error) {
+        console.log(error);
     }
 }
