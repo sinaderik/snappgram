@@ -1,6 +1,7 @@
 import { IUpdatePost, INewPost, INewUser, IUpdateUser } from "@/types";
 import { account, appwriteConfig, avatar, databases, storage } from "./config";
 import { ID, Query } from "appwrite";
+import { error } from "console";
 
 export const createUserAccount = async (user: INewUser) => {
     try {
@@ -175,6 +176,23 @@ export async function getRecentPosts() {
         [Query.orderDesc('$createdAt'), Query.limit(20)]
     )
 
-    if(!posts) throw Error
+    if (!posts) throw Error
     return posts
 }
+
+export const likePost = async (postId:string,likesArray:string[]) => {
+    try{
+        const updatedPost= await databases.updateDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.postCollectionId,
+            postId,
+            {
+                likes:likesArray
+            }
+        )
+        if(!updatedPost) throw error
+        return updatedPost
+    }catch(error){
+        console.log(error)
+    }
+} 
