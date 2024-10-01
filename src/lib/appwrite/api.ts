@@ -204,12 +204,27 @@ export const savePost = async (postId: string, userId: string) => {
             appwriteConfig.savesCollectionId,
             ID.unique(),
             {
-                user:userId,
-                post:postId,
+                user: userId,
+                post: postId,
             }
         )
         if (!savedPost) throw error
         return savedPost
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const deleteSavedPost = async (savedRecordId: string) => {
+    try {
+        const statusCode = await databases.deleteDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.savesCollectionId,
+            savedRecordId
+        )
+        if (!statusCode) throw error
+        return { status: 'ok' }
+
     } catch (error) {
         console.log(error)
     }
