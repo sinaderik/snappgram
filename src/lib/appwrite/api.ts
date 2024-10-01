@@ -1,7 +1,6 @@
-import { IUpdatePost, INewPost, INewUser, IUpdateUser } from "@/types";
+import { INewPost, INewUser } from "@/types";
 import { account, appwriteConfig, avatar, databases, storage } from "./config";
 import { ID, Query } from "appwrite";
-import { error } from "console";
 
 export const createUserAccount = async (user: INewUser) => {
     try {
@@ -227,4 +226,17 @@ export const deleteSavedPost = async (savedRecordId: string) => {
     } catch (error) {
         console.log(error)
     }
-} 
+}
+
+export const getPostById = (postId: string) => {
+    try {
+        const post = await databases.getDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.postCollectionId,
+            postId
+        )
+        return post
+    } catch (error) {
+        console.log(error)
+    }
+}

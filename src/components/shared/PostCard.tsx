@@ -1,5 +1,5 @@
 import { useUserContext } from "@/context/AuthContext"
-import { formatDateString, multiFormatDateString } from "@/lib/utils"
+import { multiFormatDateString } from "@/lib/utils"
 import { Models } from "appwrite"
 import { Link } from "react-router-dom"
 import PostStats from "./PostStats"
@@ -43,6 +43,11 @@ const PostCard = ({ post }: PostCardProps) => {
                 </Link>
             </div>
             <Link to={`/posts/${post.$id}`}>
+                <img
+                    className="post-card_img mt-4"
+                    src={post.imageUrl || 'assets/icons/profile-placeholder.svg'}
+                    alt="post-image"
+                />
                 <div className="small-medium lg:base-medium py-5">
                     <p>{post.caption}</p>
                     <ul className="flex gap-1 mt-2">
@@ -51,13 +56,8 @@ const PostCard = ({ post }: PostCardProps) => {
                         })}
                     </ul>
                 </div>
-                <img
-                    className="post-card_img"
-                    src={post.imageUrl || 'assets/icons/profile-placeholder.svg'}
-                    alt="post-image"
-                 />
             </Link>
-            <PostStats post={post} userId={user.id}/>
+            <PostStats post={post} userId={user.id} />
         </div>
     )
 }
