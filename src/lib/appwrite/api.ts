@@ -180,19 +180,37 @@ export async function getRecentPosts() {
     return posts
 }
 
-export const likePost = async (postId:string,likesArray:string[]) => {
-    try{
-        const updatedPost= await databases.updateDocument(
+export const likePost = async (postId: string, likesArray: string[]) => {
+    try {
+        const updatedPost = await databases.updateDocument(
             appwriteConfig.databaseId,
             appwriteConfig.postCollectionId,
             postId,
             {
-                likes:likesArray
+                likes: likesArray
             }
         )
-        if(!updatedPost) throw error
+        if (!updatedPost) throw error
         return updatedPost
-    }catch(error){
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const savePost = async (postId: string, userId: string) => {
+    try {
+        const savedPost = await databases.createDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.savesCollectionId,
+            ID.unique(),
+            {
+                user:userId,
+                post:postId,
+            }
+        )
+        if (!savedPost) throw error
+        return savedPost
+    } catch (error) {
         console.log(error)
     }
 } 
