@@ -11,7 +11,7 @@ export const createUserAccount = async (user: INewUser) => {
             user.password,
             user.name,
         )
-        if (!newAccount) return Error
+        if (!newAccount) throw new Error('something went wrong')
 
         const avatarUrl = avatar.getInitials(user.name)
         const newUser = await saveUserToDB({
@@ -24,7 +24,6 @@ export const createUserAccount = async (user: INewUser) => {
         return newUser
     } catch (error) {
         console.log(error)
-        return error
     }
 }
 export const saveUserToDB = async (user: {
@@ -176,7 +175,7 @@ export async function getRecentPosts() {
         [Query.orderDesc('$createdAt'), Query.limit(20)]
     )
 
-    if (!posts) throw Error
+    if (!posts) throw new Error('something went wrong')
     return posts
 }
 
@@ -190,7 +189,7 @@ export const likePost = async (postId: string, likesArray: string[]) => {
                 likes: likesArray
             }
         )
-        if (!updatedPost) throw error
+        if (!updatedPost) throw new Error('something went wrong')
         return updatedPost
     } catch (error) {
         console.log(error)
@@ -208,7 +207,7 @@ export const savePost = async (postId: string, userId: string) => {
                 post: postId,
             }
         )
-        if (!savedPost) throw error
+        if (!savedPost) throw new Error('something went wrong')
         return savedPost
     } catch (error) {
         console.log(error)
@@ -222,7 +221,7 @@ export const deleteSavedPost = async (savedRecordId: string) => {
             appwriteConfig.savesCollectionId,
             savedRecordId
         )
-        if (!statusCode) throw error
+        if (!statusCode) throw new Error('something went wrong')
         return { status: 'ok' }
 
     } catch (error) {

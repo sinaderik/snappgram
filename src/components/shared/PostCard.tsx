@@ -7,7 +7,6 @@ import PostStats from "./PostStats"
 type PostCardProps = { post: Models.Document }
 
 const PostCard = ({ post }: PostCardProps) => {
-    console.log(post)
     const { user } = useUserContext()
 
     return (
