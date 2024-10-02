@@ -287,3 +287,16 @@ export const updatePost = async (post: IUpdatePost) => {
         console.log(error);
     }
 }
+
+export const deletePost = async (postId: string, imageId: string) => {
+    if (!postId || !imageId) throw new Error('postId or imageId is not provided');
+    try {
+        await databases.deleteDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.postCollectionId,
+            postId
+        )
+    } catch (error) {
+        console.log(error)
+    }
+}
