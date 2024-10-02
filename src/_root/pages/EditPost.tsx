@@ -1,5 +1,6 @@
 import PostForm from "@/components/forms/PostForm"
 import { useGetPostById } from "@/lib/react-query/queriesAndMutations"
+import { Loader } from "lucide-react"
 import { useParams } from "react-router-dom"
 
 const EditPost = () => {
@@ -17,8 +18,10 @@ const EditPost = () => {
           />
           <h2 className='h3-bold md:h2-bold text-left w-full'>Edit post</h2>
         </div>
-
-        <PostForm post={post} action='Update' />
+        {isPending
+          ? <Loader />
+          : <PostForm post={post} action='Update' />
+        }
       </div>
     </div>
   )

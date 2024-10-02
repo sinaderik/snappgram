@@ -8,10 +8,10 @@ import { z } from "zod"
 import FileUploader from "../shared/FileUploader"
 import { PostValidation } from "@/lib/validation"
 import { Models } from "appwrite"
-import { useCreatePost } from "@/lib/react-query/queriesAndMutations"
+import { useCreatePost, useUpdatePost } from "@/lib/react-query/queriesAndMutations"
 import { useUserContext } from "@/context/AuthContext"
 import { useToast } from "@/hooks/use-toast"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Loader } from "lucide-react"
 
 type PostFormProps = {
@@ -24,6 +24,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
     const navigate = useNavigate()
     const { user } = useUserContext()
     const { mutateAsync: createPost, isPending: isLoadingCreate } = useCreatePost()
+    const { mutateAsync: updatePost, isPending: isLoadingUpdate } = useUpdatePost()
 
     const form = useForm<z.infer<typeof PostValidation>>({
         resolver: zodResolver(PostValidation),
@@ -36,6 +37,22 @@ const PostForm = ({ post, action }: PostFormProps) => {
     })
 
     async function onSubmit(values: z.infer<typeof PostValidation>) {
+        if (post && action === "Update") {
+            const updatedPost = await updatePost({
+                ...values,
+                postId: post.$id,
+                imageId: post.imageId,
+                imageUrl: post.imageUrl,
+            });
+
+            if (!updatedPost) {
+                toast({
+                    title: `${action} post failed. Please try again.`,
+                });
+            }
+            return navigate(`/posts/${post.$id}`);
+        }
+
         const newPost = await createPost({ ...values, userId: user.id })
         if (!newPost) {
             toast({ title: 'Something went wrong, please try again' })
@@ -117,7 +134,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
                         className="shad-button_dark_4"
                         type="button"
                     >
-                        Cancel
+                        <Link to='/'>Cancel</Link>
                     </Button>
                     <Button
                         className="shad-button_primary white-space-nowrap"
@@ -126,7 +143,10 @@ const PostForm = ({ post, action }: PostFormProps) => {
                         {isLoadingCreate
                             && (<><Loader /> Posting...</>)
                         }
-                        {action === 'Update' ? 'update' : 'post'}
+                        {isLoadingUpdate
+                            && (<><Loader /> Updating...</>)
+                        }
+                        {action === 'Update' ? 'Update' : 'Post'}
                     </Button>
 
                 </div>
