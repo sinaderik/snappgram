@@ -1,16 +1,27 @@
 import GridPostList from "@/components/shared/GridPostList"
 import SearchResults from "@/components/shared/SearchResults"
+import useDebounce from "@/hooks/useDebounce"
 import { useGetPosts, useSearchPosts } from "@/lib/react-query/queriesAndMutations"
+import { Loader } from "lucide-react"
 import { useState } from "react"
 
 
 const Explore = () => {
-  const [searchValue, setSearchValue] = useState('')
-  const {data:posts,isPending}=useGetPosts()
-  const {data:searchedPosts,isFetching:isSearchFetching}=useSearchPosts(searchValue)
-  // // const post = []
-  // const shouldShowSearchResult = searchValue !== ''
-  // const shouldShowPosts = !shouldShowSearchResult && post.pages.every(item => item.documents.length === 0)
+
+  const { data: posts, fetchNextPage, hasNextPage } = useGetPosts();
+
+  const [searchValue, setSearchValue] = useState("");
+  const debouncedSearch = useDebounce(searchValue, 500);
+  const { data: searchedPosts, isFetching: isSearchFetching } = useSearchPosts(debouncedSearch);
+
+  console.log(posts)
+  if(!posts){
+    return <div className="flex-center w-full h-full">
+      <Loader />
+    </div>
+  }
+  const shouldShowSearchResult = searchValue !== ''
+  const shouldShowPosts = !shouldShowSearchResult && posts.pages.every(item => item?.documents.length === 0)
 
   return (
     <div className="explore-container">
@@ -41,18 +52,18 @@ const Explore = () => {
         </div>
       </div>
 
-      {/* <div className="flex flex-wrap gap-9 w-full max-w-5xl">
+      <div className="flex flex-wrap gap-9 w-full max-w-5xl">
         {shouldShowSearchResult
-        ?(<SearchResults />)
-        :shouldShowPosts
-        ?(
-          <p className="text-center text-light-4 mt-10 w-full">End of Posts</p>
-        )
-        :post.pages.map((item,index)=>{
-          <GridPostList key={`page-${index}`} posts={item.documents} /> 
-        })
-      }
-      </div> */}
+          ? (<SearchResults />)
+          : shouldShowPosts
+            ? (
+              <p className="text-center text-light-4 mt-10 w-full">End of Posts</p>
+            )
+            : posts.pages.map((item, index) => {
+             return <GridPostList key={`page-${index}`} posts={item?.documents} />
+            })
+        }
+      </div>
     </div>
   )
 }
