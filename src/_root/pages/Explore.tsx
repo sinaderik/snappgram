@@ -1,11 +1,13 @@
 import GridPostList from "@/components/shared/GridPostList"
 import SearchResults from "@/components/shared/SearchResults"
+import { useGetPosts, useSearchPosts } from "@/lib/react-query/queriesAndMutations"
 import { useState } from "react"
 
 
 const Explore = () => {
   const [searchValue, setSearchValue] = useState('')
-  
+  const {data:posts,isPending}=useGetPosts()
+  const {data:searchedPosts,isFetching:isSearchFetching}=useSearchPosts(searchValue)
   // // const post = []
   // const shouldShowSearchResult = searchValue !== ''
   // const shouldShowPosts = !shouldShowSearchResult && post.pages.every(item => item.documents.length === 0)
