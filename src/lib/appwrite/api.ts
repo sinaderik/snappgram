@@ -341,6 +341,7 @@ export const getInfinitePosts = async ({ pageParam }: { pageParam: number }) => 
         console.log(error)
     }
 }
+
 export const searchPosts = async (searchTerm: string) => {
 
     try {
