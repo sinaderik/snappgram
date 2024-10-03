@@ -319,12 +319,13 @@ export const deletePost = async (postId: string | undefined, imageId: string) =>
     }
 }
 
-export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
-    const queries: any[] = [Query.orderDesc("$updatedAt"), Query.limit(9)];
+export async function getInfinitePosts({ pageParam }: { pageParam: string }) {
+    const queries: any[] = [Query.orderDesc("$updatedAt"), Query.limit(6)];
   
-    if (pageParam) {
-      queries.push(Query.cursorAfter(pageParam.toString()));
-    }
+    // Add the cursor only if it's not the first page
+  if (pageParam) {
+    queries.push(Query.cursorAfter(pageParam)); // Correctly use the cursor after the last fetched post
+  }
   
     try {
       const posts = await databases.listDocuments(

@@ -9,16 +9,20 @@ import { useInView } from "react-intersection-observer"
 
 const Explore = () => {
 
-  const { ref,inView } = useInView();
+  const { ref, inView } = useInView();
   const { data: posts, fetchNextPage, hasNextPage } = useGetPosts();
 
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearch = useDebounce(searchValue, 500);
   const { data: searchedPosts, isFetching: isSearchFetching } = useSearchPosts(debouncedSearch);
 
-  useEffect(()=>{
-    if(inView && !searchValue && hasNextPage) fetchNextPage()
-  },[inView,searchValue])
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+  } else {
+      console.log('No more posts to load');
+  }
+  }, [inView,searchValue,hasNextPage])
 
   if (!posts) {
     return <div className="flex-center w-full h-full">
@@ -58,22 +62,21 @@ const Explore = () => {
       </div>
 
       <div className="flex flex-wrap gap-9 w-full max-w-5xl">
-        {shouldShowSearchResult
-          ? (
-            <SearchResults
-              isSearchedFetching={isSearchFetching}
-              searchedPosts={searchedPosts}
-            />)
-          : shouldShowPosts
-            ? (
-              <p className="text-center text-light-4 mt-10 w-full">End of Posts</p>
-            )
-            : posts.pages.map((item, index) => {
-              return <GridPostList key={`page-${index}`} posts={item?.documents} />
-            })
-        }
+        {shouldShowSearchResult ? (
+          <SearchResults
+            isSearchFetching={isSearchFetching}
+            searchedPosts={searchedPosts}
+          />
+        ) : shouldShowPosts ? (
+          <p className="text-light-4 mt-10 text-center w-full">End of posts</p>
+        ) : (
+          posts.pages.map((item, index) => (
+            <GridPostList key={`page-${index}`} posts={item.documents} />
+          ))
+        )}
       </div>
-      {hasNextPage && !searchValue &&(
+
+      {hasNextPage && !searchValue && (
         <div ref={ref} className="mt-10">
           <Loader />
         </div>
