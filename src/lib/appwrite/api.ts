@@ -243,6 +243,19 @@ export const getPostById = async (postId: string) => {
     }
 }
 
+export const getUserPosts = async () => {
+    try {
+        const posts = await databases.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.postCollectionId,     
+        )
+        if(!posts) throw new Error('profile: no post')
+        return posts
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export async function updatePost(post: IUpdatePost) {
     const hasFileToUpdate = post.file.length > 0;
 
@@ -319,28 +332,28 @@ export const deletePost = async (postId: string | undefined, imageId: string) =>
     }
 }
 
-export async function getInfinitePosts({ pageParam }: { pageParam: string }) {
+export const getInfinitePosts = async ({ pageParam }: { pageParam: string }) => {
     const queries: any[] = [Query.orderDesc("$updatedAt"), Query.limit(6)];
-  
+
     // Add the cursor only if it's not the first page
-  if (pageParam) {
-    queries.push(Query.cursorAfter(pageParam)); // Correctly use the cursor after the last fetched post
-  }
-  
-    try {
-      const posts = await databases.listDocuments(
-        appwriteConfig.databaseId,
-        appwriteConfig.postCollectionId,
-        queries
-      );
-  
-      if (!posts) throw Error;
-  
-      return posts;
-    } catch (error) {
-      console.log(error);
+    if (pageParam) {
+        queries.push(Query.cursorAfter(pageParam)); // Correctly use the cursor after the last fetched post
     }
-  }
+
+    try {
+        const posts = await databases.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.postCollectionId,
+            queries
+        );
+
+        if (!posts) throw Error;
+
+        return posts;
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 export const searchPosts = async (searchTerm: string) => {
 
