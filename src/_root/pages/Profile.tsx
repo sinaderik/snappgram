@@ -1,21 +1,18 @@
 import GridPostList from "@/components/shared/GridPostList"
 import { Button } from "@/components/ui/button"
 import { useUserContext } from "@/context/AuthContext"
-import { useGetCurrentUser, useGetUserPosts } from "@/lib/react-query/queriesAndMutations"
+import { useGetCurrentUser, useGetUserById, useGetUserPosts } from "@/lib/react-query/queriesAndMutations"
 import { Loader } from "lucide-react"
 import { useParams } from "react-router-dom"
 
 
 
 const Profile = () => {
-  const { id } = useParams() 
-  const { user, isLoading: isUserLoading } = useUserContext()
-  const { data: currentUser } = useGetCurrentUser()
+  
+  const { id } = useParams()
+  const { user: currentUser } = useUserContext()
+  const { data: user, isPending: isUserLoading } = useGetUserById(String(id))
   const { data: posts, isPending: isGettingPost } = useGetUserPosts(String(id))
-
-
-  console.log(user)
-  console.log('current user ', currentUser)
 
   if (isUserLoading) {
     return (
@@ -32,15 +29,15 @@ const Profile = () => {
           <div className="flex items-center gap-3 ">
             <img
               className="rounded-full h-9 w-9 md:h-14 md:w-14"
-              src={user.imageUrl}
+              src={user?.imageUrl}
               alt="profile-img"
             />
 
             <div className="flex flex-col">
-              <h2 className="h3-bold">{user.name}</h2>
-              <p className="medium-regular text-light-3">@{user.username}</p>
+              <h2 className="h3-bold">{user?.name}</h2>
+              <p className="medium-regular text-light-3">@{user?.username}</p>
             </div>
-            {user.id === currentUser?.$id
+            {user?.$id === currentUser?.id
               ? <Button className="ml-6 shad-button_dark_4">Edit profile</Button>
               : <Button className="ml-6 shad-button_primary">follow</Button>}
           </div>
@@ -60,7 +57,7 @@ const Profile = () => {
               <p>Following</p>
             </div>
           </div>
-          <p>Some text for the bio </p>
+          <p className="text-gray-400">bio is not written yet ...</p>
         </div>
         <hr className="border-slate-700 mt-3" />
       </div>
