@@ -121,10 +121,11 @@ export const useGetPostById = (postId: string) => {
     })
 }
 
-export const useGetUserPosts = () => {
+export const useGetUserPosts = (userId:string) => {
     return useQuery({
-        queryKey: [QUERY_KEYS.GET_USER_POSTS],
-        queryFn: () => getUserPosts()
+        queryKey: [QUERY_KEYS.GET_USER_POSTS,userId],
+        queryFn: () => getUserPosts(userId),
+        enabled:!!userId,
     })
 }
 

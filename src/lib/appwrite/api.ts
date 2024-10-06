@@ -87,7 +87,6 @@ export async function createPost(post: INewPost) {
         const uploadedFile = await uploadFile(post.file[0]);
 
         if (!uploadedFile) throw Error;
-
         // Get file url
         const fileUrl = getFilePreview(uploadedFile.$id);
         if (!fileUrl) {
@@ -97,13 +96,14 @@ export async function createPost(post: INewPost) {
 
         // Convert tags into array
         const tags = post.tags?.replace(/ /g, "").split(",") || [];
-
+        const currentUser = await account.get();
         // Create post
         const newPost = await databases.createDocument(
             appwriteConfig.databaseId,
             appwriteConfig.postCollectionId,
             ID.unique(),
             {
+                creatorId: currentUser.$id,
                 creator: post.userId,
                 caption: post.caption,
                 imageUrl: fileUrl,
@@ -243,13 +243,20 @@ export const getPostById = async (postId: string) => {
     }
 }
 
-export const getUserPosts = async () => {
+export const getUserPosts = async (userId: string) => {
+    if (!userId) {
+        console.log('no userId')
+    }
+    console.log('user id found', userId)
     try {
+        
         const posts = await databases.listDocuments(
             appwriteConfig.databaseId,
-            appwriteConfig.postCollectionId,     
+            appwriteConfig.postCollectionId,
+            [Query.equal("creator", userId), Query.orderDesc("$createdAt")]
+
         )
-        if(!posts) throw new Error('profile: no post')
+        if (!posts) throw new Error('profile: no post')
         return posts
     } catch (error) {
         console.log(error)
