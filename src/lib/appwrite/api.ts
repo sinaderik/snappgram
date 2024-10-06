@@ -245,9 +245,9 @@ export const getPostById = async (postId: string) => {
 
 export const getUserPosts = async (userId: string) => {
     if (!userId) {
-        console.log('no userId')
+      throw new Error('UserId not found')
     }
-    console.log('user id found', userId)
+    
     try {
         
         const posts = await databases.listDocuments(
