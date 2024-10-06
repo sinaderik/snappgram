@@ -1,3 +1,4 @@
+import GridPostList from "@/components/shared/GridPostList"
 import { Button } from "@/components/ui/button"
 import { useUserContext } from "@/context/AuthContext"
 import { useGetCurrentUser, useGetUserPosts } from "@/lib/react-query/queriesAndMutations"
@@ -7,10 +8,10 @@ import { useParams } from "react-router-dom"
 
 
 const Profile = () => {
-  // const { id } = useParams() 
+  const { id } = useParams() 
   const { user, isLoading: isUserLoading } = useUserContext()
   const { data: currentUser } = useGetCurrentUser()
-  const { data: posts } = useGetUserPosts(user.id)
+  const { data: posts, isPending: isGettingPost } = useGetUserPosts(String(id))
 
 
   console.log(user)
@@ -61,7 +62,12 @@ const Profile = () => {
           </div>
           <p>Some text for the bio </p>
         </div>
+        <hr className="border-slate-700 mt-3" />
       </div>
+      {isGettingPost
+        ? <Loader />
+        : <GridPostList posts={posts?.documents} showStats={false} showUser={false} />
+      }
     </div>
   )
 }

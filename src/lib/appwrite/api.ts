@@ -243,13 +243,27 @@ export const getPostById = async (postId: string) => {
     }
 }
 
+export const getUserById = async (userId: string) => {
+    try {
+        const user = await databases.getDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.userCollectionId,
+            userId
+        )
+        if (!user) throw Error
+        return user
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export const getUserPosts = async (userId: string) => {
     if (!userId) {
-      throw new Error('UserId not found')
+        throw new Error('UserId not found')
     }
-    
+
     try {
-        
+
         const posts = await databases.listDocuments(
             appwriteConfig.databaseId,
             appwriteConfig.postCollectionId,
