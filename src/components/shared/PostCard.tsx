@@ -4,7 +4,7 @@ import { Models } from "appwrite"
 import { Link } from "react-router-dom"
 import PostStats from "./PostStats"
 
-type PostCardProps = { post: Models.Document }
+type PostCardProps = { post: Models.Document  }
 
 const PostCard = ({ post }: PostCardProps) => {
     const { user } = useUserContext()
