@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { multiFormatDateString } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
@@ -7,10 +7,13 @@ import PostStats from "@/components/shared/PostStats";
 import { useGetPostById } from "@/lib/react-query/queriesAndMutations";
 import { useUserContext } from "@/context/AuthContext";
 
+
 const PostDetails = () => {
+
   const { id } = useParams()
   const { user } = useUserContext()
   const { data: post, isPending } = useGetPostById(id || '')
+  const navigate = useNavigate()
 
   const handleDeletePost = async () => {
 
@@ -19,8 +22,9 @@ const PostDetails = () => {
   return (
     <div className="post_details-container">
       <div className="hidden md:flex max-w-5xl w-full">
-        <Link to='/'>
+        {/* <Link> */}
           <Button
+            onClick={() => navigate(-1)}
             variant="ghost"
             className="shad-button_ghost">
             <img
@@ -31,7 +35,7 @@ const PostDetails = () => {
             />
             <p className="small-medium lg:base-medium">Back</p>
           </Button>
-        </Link>
+        {/* </Link> */}
       </div>
 
       {isPending || !post ? (

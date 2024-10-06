@@ -1,14 +1,14 @@
 import GridPostList from "@/components/shared/GridPostList"
 import { Button } from "@/components/ui/button"
 import { useUserContext } from "@/context/AuthContext"
-import { useGetCurrentUser, useGetUserById, useGetUserPosts } from "@/lib/react-query/queriesAndMutations"
+import { useGetUserById, useGetUserPosts } from "@/lib/react-query/queriesAndMutations"
 import { Loader } from "lucide-react"
 import { useParams } from "react-router-dom"
 
 
 
 const Profile = () => {
-  
+
   const { id } = useParams()
   const { user: currentUser } = useUserContext()
   const { data: user, isPending: isUserLoading } = useGetUserById(String(id))
