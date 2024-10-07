@@ -12,6 +12,7 @@ const PostDetails = () => {
   const { id } = useParams()
   const { user } = useUserContext()
   const { data: post, isPending } = useGetPostById(id || '')
+  // const { data: user, isPending: isUserLoading } = useGetUserById(String(id))
   const navigate = useNavigate()
 
   const handleDeletePost = async () => {
@@ -22,18 +23,18 @@ const PostDetails = () => {
     <div className="post_details-container">
       <div className="hidden md:flex max-w-5xl w-full">
         {/* <Link> */}
-          <Button
-            onClick={() => navigate(-1)}
-            variant="ghost"
-            className="shad-button_ghost">
-            <img
-              src={"/assets/icons/back.svg"}
-              alt="back"
-              width={24}
-              height={24}
-            />
-            <p className="small-medium lg:base-medium">Back</p>
-          </Button>
+        <Button
+          onClick={() => navigate(-1)}
+          variant="ghost"
+          className="shad-button_ghost">
+          <img
+            src={"/assets/icons/back.svg"}
+            alt="back"
+            width={24}
+            height={24}
+          />
+          <p className="small-medium lg:base-medium">Back</p>
+        </Button>
         {/* </Link> */}
       </div>
 
@@ -119,7 +120,8 @@ const PostDetails = () => {
             </div>
 
             <div className="w-full">
-              <PostStats post={post} userId={user.id} />
+              {user.id !== post?.creator.$id && <PostStats post={post} userId={user.id} />}
+
             </div>
           </div>
         </div>
