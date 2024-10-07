@@ -1,10 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -14,8 +14,21 @@ import { Input } from "@/components/ui/input"
 import { z } from "zod"
 
 const formSchema = z.object({
+  name: z.string().min(3, {
+    message: "Name must be at least 3 characters.",
+  }),
   username: z.string().min(3, {
     message: "Username must be at least 3 characters.",
+  }),
+  email: z.string().min(3, {
+    message: "This is not a valid email",
+  }).regex(/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/, {
+    message: "Invalid email format",
+  }),
+  bio: z.string().min(5, {
+    message: "Bio must be at least 5 characters.",
+  }).max(2200,{
+    message: "You are not allowed to write more than 2200 characters"
   }),
 })
 
@@ -24,7 +37,10 @@ const UpdateProfile = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name:"",
       username: "",
+      email:"",
+      bio:"",
     },
   })
 
@@ -46,18 +62,57 @@ const UpdateProfile = () => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
-            name="username"
+            name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username</FormLabel>
+                <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input className="shad-input" placeholder="shadcn" {...field} />
+                  <Input className="shad-input" placeholder="name..." {...field} />
                 </FormControl>
                 <FormMessage className="shad-form_message" />
               </FormItem>
             )}
           />
-          <div className="flex items-center gap-4">
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input className="shad-input" placeholder="username..." {...field} />
+                </FormControl>
+                <FormMessage className="shad-form_message" />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input className="shad-input" type="email" placeholder="email..." {...field} />
+                </FormControl>
+                <FormMessage className="shad-form_message" />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="bio"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Bio</FormLabel>
+                <FormControl>
+                <Textarea className="shad-textarea"  placeholder="Type your bio..."  {...field} />
+                </FormControl>
+                <FormMessage className="shad-form_message" />
+              </FormItem>
+            )}
+          />
+          <div className="flex items-center gap-4 pb-6 mb-6">
             <Button className="shad-button_dark_4 ">Cancel</Button>
             <Button className="shad-button_primary" type="submit">Update</Button>
           </div>
