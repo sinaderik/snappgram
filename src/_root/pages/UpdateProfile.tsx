@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { z } from "zod"
+import { useParams } from "react-router-dom"
+import { useGetUserById } from "@/lib/react-query/queriesAndMutations"
 
 const formSchema = z.object({
   name: z.string().min(3, {
@@ -27,20 +29,22 @@ const formSchema = z.object({
   }),
   bio: z.string().min(5, {
     message: "Bio must be at least 5 characters.",
-  }).max(2200,{
+  }).max(2200, {
     message: "You are not allowed to write more than 2200 characters"
   }),
 })
 
 const UpdateProfile = () => {
+  const { id } = useParams()
+  const { data: currentUser } = useGetUserById(id)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name:"",
+      name: "",
       username: "",
-      email:"",
-      bio:"",
+      email: "",
+      bio: "",
     },
   })
 
@@ -58,6 +62,14 @@ const UpdateProfile = () => {
         />
         Edit Profile
       </h2>
+      <div className="flex items-center gap-3 mb-8">
+        <img
+          className="w-32 h-32 rounded-full"
+          src={currentUser?.imageUrl}
+          alt="profile-picture"
+        />
+        <p className="text-blue-400 cursor-pointer">Change profile picture</p>
+      </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
@@ -106,7 +118,7 @@ const UpdateProfile = () => {
               <FormItem>
                 <FormLabel>Bio</FormLabel>
                 <FormControl>
-                <Textarea className="shad-textarea"  placeholder="Type your bio..."  {...field} />
+                  <Textarea className="shad-textarea" placeholder="Type your bio..."  {...field} />
                 </FormControl>
                 <FormMessage className="shad-form_message" />
               </FormItem>
