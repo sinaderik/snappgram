@@ -8,7 +8,7 @@ import { useInView } from "react-intersection-observer";
 
 
 const Home = () => {
-  
+
   const { ref, inView } = useInView();
   const { data: posts, fetchNextPage, hasNextPage, isLoading: isLoadingPosts } = useGetPosts();
   const { data: users, isPending: isGettingUsers } = useGetUsers(10)
@@ -42,7 +42,7 @@ const Home = () => {
         )}
 
       </div>
-      <div className="hidden lg:block w-1/3 max-w-96 h-full border-2 border-slate-900">
+      <div className="hidden lg:block w-1/3 max-w-96 h-full border-2 border-slate-900 overflow-scroll">
         <h2 className="h3-bold md:h2-bold block w-full pt-10 text-center">Recently Joined</h2>
         <div className="flex items-start justify-center content-start h-full pt-4 gap-4 flex-wrap">
           {isGettingUsers

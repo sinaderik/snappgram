@@ -11,7 +11,7 @@ type GridPostListProps = {
 
 const GridPostList = ({ posts, showStats = true, showUser = true }: GridPostListProps) => {
   const { user } = useUserContext();
-  
+
   return (
     <ul className="grid-container">
       {posts?.map(post => (
@@ -27,7 +27,7 @@ const GridPostList = ({ posts, showStats = true, showUser = true }: GridPostList
                 <p className="line-clamp-1">{post.creator.name}</p>
               </div>
             )}
-            {showStats && <PostStats post={post} userId={user.id} />}
+            {showStats && post?.creator?.$id !== user.id && <PostStats post={post} userId={user.id} />}
           </div>
         </li>
       ))}

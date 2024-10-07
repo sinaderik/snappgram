@@ -14,10 +14,9 @@ const Saved = () => {
   console.log(savedPosts)
   return (
     <div className="profile-container">
-      {isGettingSavedPosts
-        ? <Loader />
-        : <GridPostList posts={savedPosts} showStats={false} showUser={false} />
-      }
+      {isGettingSavedPosts && <Loader />}
+      {savedPosts.length===0 && <h2 className="h3-bold md:h2-bold text-center w-full">You have not saved any post yet...</h2>}
+      {!isGettingSavedPosts && savedPosts && <GridPostList posts={savedPosts} showStats={false} showUser={false}/>}
     </div>
   )
 }

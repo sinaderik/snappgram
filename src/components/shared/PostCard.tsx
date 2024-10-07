@@ -57,7 +57,7 @@ const PostCard = ({ post }: PostCardProps) => {
                     </ul>
                 </div>
             </Link>
-            <PostStats post={post} userId={user.id} />
+            {post.creator.$id !== user.id && <PostStats post={post} userId={user.id} />}
         </div>
     )
 }
