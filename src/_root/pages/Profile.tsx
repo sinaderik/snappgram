@@ -40,10 +40,12 @@ const Profile = () => {
             </div>
             {user?.$id === currentUser?.id
               ? <div className="flex items-center">
+                  <Link to={`/update-profile/${id}`}>
                 <Button className="ml-6 shad-button_dark_4">
-                  <img className="h-5 w-5" src='/assets/icons/edit.svg' alt="" />
-                  Edit profile
+                    <img className="h-5 w-5" src='/assets/icons/edit.svg' alt="" />
+                    Edit profile
                 </Button>
+                  </Link>
                 <Link to='/create-post'>
                   <Button className="ml-6 shad-button_primary">
                     <img
@@ -56,12 +58,12 @@ const Profile = () => {
               </div>
               : <Button className="ml-6 shad-button_primary">
                 follow
-                <img 
-                className="group-hover:invert-white invert-white h-5 w-5"
-                 src="/assets/icons/follow.svg" 
-                 alt="follow"
-                  />
-                </Button>}
+                <img
+                  className="group-hover:invert-white invert-white h-5 w-5"
+                  src="/assets/icons/follow.svg"
+                  alt="follow"
+                />
+              </Button>}
           </div>
         </div>
         <div className="flex flex-col items-center sm:items-start gap-6">
