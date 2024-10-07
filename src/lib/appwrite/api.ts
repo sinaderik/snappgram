@@ -1,4 +1,4 @@
-import { INewPost, INewUser, IUpdatePost } from "@/types";
+import { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types";
 import { account, appwriteConfig, avatar, databases, storage } from "./config";
 import { ID, Query } from "appwrite";
 
@@ -339,6 +339,59 @@ export async function updatePost(post: IUpdatePost) {
     }
 }
 
+export const updateProfile = async (user: IUpdateUser) => {
+    const hasFileToUpdate = user.file.length > 0;
+    try {
+        let image = {
+            imageUrl: user.imageUrl,
+            imageId: user.imageId,
+        };
+        if (hasFileToUpdate) {
+            const uploadedFile = await uploadFile(user.file[0])
+            if (!uploadedFile) throw Error;
+
+            // Get new file url
+            const fileUrl = getFilePreview(uploadedFile.$id);
+            if (!fileUrl) {
+                await deleteFile(uploadedFile.$id);
+                throw Error;
+            }
+
+            image = { ...image, imageUrl: fileUrl, imageId: uploadedFile.$id };
+        }
+        const updatedProfile = await databases.updateDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.userCollectionId,
+            user.userId,
+            {
+                name: user.name,
+                username: user.username,
+                bio: user.bio,
+                imageUrl: image.imageUrl,
+                imageId: image.imageId,
+            }
+        )
+        // Failed to update
+        if (!updatedProfile) {
+            // Delete new file that has been recently uploaded
+            if (hasFileToUpdate) {
+                await deleteFile(image.imageId);
+            }
+            // If no new file uploaded, just throw error
+            throw Error;
+        }
+
+        // Safely delete old file after successful update
+        if (user.imageId && hasFileToUpdate) {
+            await deleteFile(user.imageId);
+        }
+
+        return updatedProfile;
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export const deletePost = async (postId: string | undefined, imageId: string) => {
     if (!postId || !imageId) throw new Error('postId or imageId is not provided');
     try {
@@ -393,13 +446,13 @@ export const searchPosts = async (searchTerm: string) => {
     }
 }
 
-export const getUsers = async (limit?:number) => {
-    let query:string[]=[]
-    
-    if(limit){
-        query=[Query.orderDesc('$createdAt'), Query.limit(limit)]
-    }else{
-        query=[Query.orderDesc('$createdAt')]
+export const getUsers = async (limit?: number) => {
+    let query: string[] = []
+
+    if (limit) {
+        query = [Query.orderDesc('$createdAt'), Query.limit(limit)]
+    } else {
+        query = [Query.orderDesc('$createdAt')]
     }
 
     try {

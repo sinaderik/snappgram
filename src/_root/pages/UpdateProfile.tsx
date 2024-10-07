@@ -36,7 +36,7 @@ const formSchema = z.object({
 
 const UpdateProfile = () => {
   const { id } = useParams()
-  const { data: currentUser } = useGetUserById(id)
+  const { data: currentUser } = useGetUserById(id as string)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
