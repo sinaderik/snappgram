@@ -1,7 +1,8 @@
+import Loader from "@/components/shared/Loader";
 import PostCard from "@/components/shared/PostCard";
 import UsersList from "@/components/shared/UsersList";
 import { useGetPosts, useGetUsers } from "@/lib/react-query/queriesAndMutations";
-import { Loader } from "lucide-react";
+
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 

@@ -12,7 +12,8 @@ import { useCreatePost, useUpdatePost } from "@/lib/react-query/queriesAndMutati
 import { useUserContext } from "@/context/AuthContext"
 import { useToast } from "@/hooks/use-toast"
 import { Link, useNavigate } from "react-router-dom"
-import { Loader } from "lucide-react"
+import Loader from "../shared/Loader"
+
 
 
 type PostFormProps = {
@@ -143,10 +144,10 @@ const PostForm = ({ post, action }: PostFormProps) => {
                         type="submit"
                     >
                         {isLoadingCreate
-                            && (<><Loader /> Posting...</>)
+                            && (<><Loader /></>)
                         }
                         {isLoadingUpdate
-                            && (<><Loader /> Updating...</>)
+                            && (<><Loader /></>)
                         }
                         {action === 'Update' ? 'Update' : 'Post'}
                     </Button>

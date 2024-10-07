@@ -37,8 +37,7 @@ const SigninFrom = () => {
 
 
   async function onSubmit(values: z.infer<typeof SigninValidation>) {
-    console.log('we are here')
-    console.log(values)
+   
     const session = await signInAccount({ email: values.email, password: values.password })
     if (!session) return toast({ title: 'Sign in failed. please try again' })
 

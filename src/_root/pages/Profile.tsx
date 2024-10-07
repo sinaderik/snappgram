@@ -1,9 +1,10 @@
 import GridPostList from "@/components/shared/GridPostList"
+import Loader from "@/components/shared/Loader"
 import { Button } from "@/components/ui/button"
 import { useUserContext } from "@/context/AuthContext"
 import { useGetUserById, useGetUserPosts } from "@/lib/react-query/queriesAndMutations"
-import { Loader } from "lucide-react"
-import { useParams } from "react-router-dom"
+
+import { Link, useParams } from "react-router-dom"
 
 
 
@@ -38,7 +39,10 @@ const Profile = () => {
               <p className="medium-regular text-light-3">@{user?.username}</p>
             </div>
             {user?.$id === currentUser?.id
-              ? <Button className="ml-6 shad-button_dark_4">Edit profile</Button>
+              ? <div className="flex items-center">
+                <Button className="ml-6 shad-button_dark_4">Edit profile</Button>
+                <Link to='/create-post'><Button className="ml-6 shad-button_primary">Post</Button></Link>
+              </div>
               : <Button className="ml-6 shad-button_primary">follow</Button>}
           </div>
         </div>

@@ -1,11 +1,10 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { multiFormatDateString } from "@/lib/utils";
-
 import { Button } from "@/components/ui/button";
-import { Loader } from "lucide-react";
 import PostStats from "@/components/shared/PostStats";
 import { useGetPostById } from "@/lib/react-query/queriesAndMutations";
 import { useUserContext } from "@/context/AuthContext";
+import Loader from "@/components/shared/Loader";
 
 
 const PostDetails = () => {
