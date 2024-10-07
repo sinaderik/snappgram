@@ -31,7 +31,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
         e.stopPropagation()
 
         let newLikes = [...likes]
-        console.log(newLikes)
+  
         const hasLiked = newLikes.includes(userId)
 
         if (hasLiked) {
