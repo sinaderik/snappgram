@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/use-toast"
 import { Link, useNavigate } from "react-router-dom"
 import { Loader } from "lucide-react"
 
+
 type PostFormProps = {
     post?: Models.Document,
     action: 'Update' | 'Create',
@@ -54,6 +55,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
         }
 
         const newPost = await createPost({ ...values, userId: user.id })
+
         if (!newPost) {
             toast({ title: 'Something went wrong, please try again' })
         }

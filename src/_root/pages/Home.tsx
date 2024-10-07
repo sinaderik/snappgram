@@ -10,13 +10,14 @@ const Home = () => {
   // const { data: posts, isLoading: isLoadingPosts } = useGetRecentPosts()
   const { ref, inView } = useInView();
   const { data: posts, fetchNextPage, hasNextPage, isLoading: isLoadingPosts } = useGetPosts();
- 
+
+
   useEffect(() => {
     if (inView && hasNextPage) {
       fetchNextPage()
     }
   }, [inView])
-  
+
   return (
     <div className="flex flex-1">
       <div className="home-container">
@@ -38,6 +39,13 @@ const Home = () => {
             <Loader />
           </div>
         )}
+
+      </div>
+      <div className="hidden lg:block w-1/3 max-w-96">
+        <h2 className="h3-bold md:h2-bold text-left block w-full pt-10">Top Creators</h2>
+        <div className="flex border-2 border-slate-900">
+          
+        </div>
       </div>
     </div>
   )

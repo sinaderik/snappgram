@@ -96,14 +96,13 @@ export async function createPost(post: INewPost) {
 
         // Convert tags into array
         const tags = post.tags?.replace(/ /g, "").split(",") || [];
-        const currentUser = await account.get();
+
         // Create post
         const newPost = await databases.createDocument(
             appwriteConfig.databaseId,
             appwriteConfig.postCollectionId,
             ID.unique(),
             {
-                creatorId: currentUser.$id,
                 creator: post.userId,
                 caption: post.caption,
                 imageUrl: fileUrl,
@@ -389,6 +388,20 @@ export const searchPosts = async (searchTerm: string) => {
 
         return posts
 
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const getUsers = async () => {
+    try {
+        const users = await databases.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.userCollectionId,
+            [Query.orderDesc('$createdAt'), Query.limit(10)]
+        )
+        if (!users) throw Error;
+        return users
     } catch (error) {
         console.log(error)
     }

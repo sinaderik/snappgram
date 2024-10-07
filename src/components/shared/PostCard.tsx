@@ -8,7 +8,7 @@ type PostCardProps = { post: Models.Document  }
 
 const PostCard = ({ post }: PostCardProps) => {
     const { user } = useUserContext()
-
+ 
     return (
         <div className="post-card">
             <div className="flex-between">
