@@ -12,12 +12,17 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { z } from "zod"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useGetUserById } from "@/lib/react-query/queriesAndMutations"
 import ProfileUploader from "@/components/shared/ProfileUploader"
+import { updateUserProfile } from "@/lib/appwrite/api"
+import { toast } from "@/hooks/use-toast"
+import { useUserContext } from "@/context/AuthContext"
+import { useState } from "react"
+import Loader from "@/components/shared/Loader"
 
 const formSchema = z.object({
-  file:z.custom<File[]>(),
+  file: z.custom<File[]>(),
   name: z.string().min(3, {
     message: "Name must be at least 3 characters.",
   }),
@@ -36,8 +41,9 @@ const formSchema = z.object({
 
 const UpdateProfile = () => {
   const { id } = useParams()
-  const { data: currentUser } = useGetUserById(id as string)
-
+  const { data: currentUser } = useGetUserById(id as string);
+  const { user, setUser } = useUserContext();
+  const navigate = useNavigate()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,15 +55,40 @@ const UpdateProfile = () => {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
-  }
+  const handleUpdate = async (values: z.infer<typeof formSchema>) => {
+    setIsUpdatingProfile(true)
+    const updatedProfile = await updateUserProfile({
+      userId: currentUser?.$id as string,
+      name: values.name,
+      bio: values.bio,
+      file: values.file,
+      imageUrl: currentUser?.imageUrl,
+      imageId: currentUser?.imageId,
+      username: values.username,
+    })
+    if (!updatedProfile) {
+      toast({
+        title: `Update user failed. Please try again.`,
+      });
+    }
 
+    setUser({
+      ...user,
+      name: updatedProfile?.name,
+      username: updatedProfile?.username,
+      bio: updatedProfile?.bio,
+      imageUrl: updatedProfile?.imageUrl,
+      email: updatedProfile?.email,
+    });
+    setIsUpdatingProfile(false)
+    return navigate(`/profile/${id}`);
+  }
+  const [isUpdatingProfile, setIsUpdatingProfile] = useState<boolean>(false)
   return (
     <div className="mt-9 w-2/5">
-   
+
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(handleUpdate)} className="space-y-8">
           <FormField
             control={form.control}
             name="file"
@@ -127,7 +158,12 @@ const UpdateProfile = () => {
           />
           <div className="flex items-center gap-4 pb-6 mb-6">
             <Button className="shad-button_dark_4 ">Cancel</Button>
-            <Button className="shad-button_primary" type="submit">Update</Button>
+            <Button className="shad-button_primary" type="submit">
+              {isUpdatingProfile
+                ? <><Loader />Updating</>
+                : 'Update'
+              }
+            </Button>
           </div>
         </form>
       </Form>

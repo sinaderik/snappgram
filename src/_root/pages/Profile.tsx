@@ -40,12 +40,12 @@ const Profile = () => {
             </div>
             {user?.$id === currentUser?.id
               ? <div className="flex items-center">
-                  <Link to={`/update-profile/${id}`}>
-                <Button className="ml-6 shad-button_dark_4">
+                <Link to={`/update-profile/${id}`}>
+                  <Button className="ml-6 shad-button_dark_4">
                     <img className="h-5 w-5" src='/assets/icons/edit.svg' alt="" />
                     Edit profile
-                </Button>
-                  </Link>
+                  </Button>
+                </Link>
                 <Link to='/create-post'>
                   <Button className="ml-6 shad-button_primary">
                     <img
@@ -81,7 +81,11 @@ const Profile = () => {
               <p>Following</p>
             </div>
           </div>
-          <p className="text-gray-400">bio is not written yet ...</p>
+          {user?.bio
+            ? <p>{user?.bio}</p>
+            : <p className="text-gray-400">bio is not written yet ...</p>
+          }
+
         </div>
         <hr className="border-slate-700 mt-3" />
       </div>

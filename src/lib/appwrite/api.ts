@@ -339,7 +339,7 @@ export async function updatePost(post: IUpdatePost) {
     }
 }
 
-export const updateProfile = async (user: IUpdateUser) => {
+export const updateUserProfile = async (user: IUpdateUser) => {
     const hasFileToUpdate = user.file.length > 0;
     try {
         let image = {
