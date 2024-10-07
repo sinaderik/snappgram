@@ -8,11 +8,10 @@ import { useInView } from "react-intersection-observer";
 
 
 const Home = () => {
-
-  // const { data: posts, isLoading: isLoadingPosts } = useGetRecentPosts()
+  
   const { ref, inView } = useInView();
   const { data: posts, fetchNextPage, hasNextPage, isLoading: isLoadingPosts } = useGetPosts();
-  const { data: users, isPending: isGettingUsers } = useGetUsers()
+  const { data: users, isPending: isGettingUsers } = useGetUsers(10)
 
   useEffect(() => {
     if (inView && hasNextPage) {

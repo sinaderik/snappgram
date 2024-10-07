@@ -393,12 +393,20 @@ export const searchPosts = async (searchTerm: string) => {
     }
 }
 
-export const getUsers = async () => {
+export const getUsers = async (limit?:number) => {
+    let query:string[]=[]
+    
+    if(limit){
+        query=[Query.orderDesc('$createdAt'), Query.limit(limit)]
+    }else{
+        query=[Query.orderDesc('$createdAt')]
+    }
+
     try {
         const users = await databases.listDocuments(
             appwriteConfig.databaseId,
             appwriteConfig.userCollectionId,
-            [Query.orderDesc('$createdAt'), Query.limit(10)]
+            query
         )
         if (!users) throw Error;
         return users

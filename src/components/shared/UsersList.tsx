@@ -12,7 +12,7 @@ const UsersList = ({ users }: UserListProps) => {
 
     return (
         users?.map(user => (
-            <div key={user.$id} className='flex-1 flex flex-col gap-1 justify-center items-center border-2 border-dark-4 rounded p-5 h-max'>
+            <div key={user.$id} className='flex flex-1 flex-col gap-1 justify-center items-center border-2 border-dark-4 rounded p-5 h-max'>
                 <Link to={`/profile/${user.$id}`}>
                     <img
                         className='rounded-full h-10 w-10'
