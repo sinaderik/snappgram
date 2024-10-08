@@ -23,7 +23,7 @@ const AllUsers = () => {
                         />
                         All Users
                     </h2>
-                    <div className='max-w-4xl flex content-start items-center justify-around flex-wrap gap-7 overflow-scroll'>
+                    <div className='max-w-4xl flex content-start items-center justify-around flex-wrap gap-7 overflow-auto max-h-screen'>
                         <UsersList users={users?.documents} />
                     </div>
                 </div>

@@ -9,12 +9,13 @@ type UserListProps = {
 
 const UsersList = ({ users }: UserListProps) => {
     const { user: currentUser } = useUserContext()
-    const navigate=useNavigate()
-    // to={`/update-profile/${id}`}
-    const redirectToEditProfilePage=(e: React.MouseEvent<HTMLButtonElement>)=>{
+    const navigate = useNavigate()
+
+    const redirectToEditProfilePage = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
         navigate(`/update-profile/${currentUser.id}`)
     }
+
     return (
         users?.map(user => (
             <div key={user.$id} className='flex flex-1 flex-col gap-1 justify-center items-center border-2 border-dark-4 rounded p-5 h-max'>
