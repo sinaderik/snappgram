@@ -44,6 +44,9 @@ const UpdateProfile = () => {
   const { data: currentUser } = useGetUserById(id as string);
   const { user, setUser } = useUserContext();
   const navigate = useNavigate()
+  const [isUpdatingProfile, setIsUpdatingProfile] = useState<boolean>(false)
+
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -83,7 +86,11 @@ const UpdateProfile = () => {
     setIsUpdatingProfile(false)
     return navigate(`/profile/${id}`);
   }
-  const [isUpdatingProfile, setIsUpdatingProfile] = useState<boolean>(false)
+
+  const handelCancel=(e: React.MouseEvent<HTMLButtonElement>)=>{
+    e.preventDefault()
+    navigate(-1)
+  }
   return (
     <div className="mt-9 w-2/5">
 
@@ -157,7 +164,10 @@ const UpdateProfile = () => {
             )}
           />
           <div className="flex items-center gap-4 pb-6 mb-6">
-            <Button className="shad-button_dark_4 ">Cancel</Button>
+            <Button 
+            onClick={handelCancel}
+            className="shad-button_dark_4 "
+            >Cancel</Button>
             <Button className="shad-button_primary" type="submit">
               {isUpdatingProfile
                 ? <><Loader />Updating</>
