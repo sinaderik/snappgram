@@ -84,6 +84,9 @@ const UpdateProfile = () => {
       email: updatedProfile?.email,
     });
     setIsUpdatingProfile(false)
+    toast({
+      title: `Profile successfully updated`,
+    });
     return navigate(`/profile/${id}`);
   }
 

@@ -82,7 +82,7 @@ const Profile = () => {
             </div>
           </div>
           {user?.bio
-            ? <p>{user?.bio}</p>
+            ? <p className="max-w-96">{user?.bio}</p>
             : <p className="text-gray-400">bio is not written yet ...</p>
           }
 
