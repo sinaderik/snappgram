@@ -92,7 +92,7 @@ const UpdateProfile = () => {
     navigate(-1)
   }
   return (
-    <div className="mt-9 w-2/5">
+    <div className="mt-9 w-full md:w-2/5 overflow-auto max-h-screen p-3">
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleUpdate)} className="space-y-8">

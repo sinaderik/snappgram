@@ -26,7 +26,7 @@ const Profile = () => {
   return (
     <div className="profile-container">
       <div className="container">
-        <div className="profile-inner_container items-center sm:items-start">
+        <div className="profile-inner_container justify-between items-center sm:items-start">
           <div className="flex items-center gap-3 ">
             <img
               className="rounded-full h-9 w-9 md:h-14 md:w-14"
@@ -39,15 +39,15 @@ const Profile = () => {
               <p className="medium-regular text-light-3">@{user?.username}</p>
             </div>
             {user?.$id === currentUser?.id
-              ? <div className="flex items-center">
+              ? <div className="sm:ml-6 w-full flex flex-col justify-center items-stretch gap-3 sm:flex-row sm:items-center sm:gap-5">
                 <Link to={`/update-profile/${id}`}>
-                  <Button className="ml-6 shad-button_dark_4">
+                  <Button className="shad-button_dark_4 w-full sm:w-auto">
                     <img className="h-5 w-5" src='/assets/icons/edit.svg' alt="" />
                     Edit profile
                   </Button>
                 </Link>
                 <Link to='/create-post'>
-                  <Button className="ml-6 shad-button_primary">
+                  <Button className="shad-button_primary w-full sm:w-auto">
                     <img
                       className="group-hover:invert-white invert-white h-5 w-5"
                       src="/assets/icons/add-post.svg"
